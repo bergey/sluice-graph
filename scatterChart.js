@@ -1,3 +1,19 @@
+function show_details(d) {
+    var div = d3.select('#selected');
+    div.html("");
+    div.append("h3").text(d.FACILITY_DESCRIPTION)
+    div.append('p').html(d.ASSET_ADDR + "<br />" + "Philadelphia, PA");
+    var table = div.append('table')
+    table_row(table, 'Build in', d.YEAR_BUILT);
+    table_row(table, 'Floor Area', d.BLDG_FLOOR_AREA + ' square feet');
+    table_row(table, 'Electricity', d.ELECTRIC_USE + ' kWh per year');
+    table_row(table, 'Gas', d.GAS_USE);
+};
+
+function table_row(table, key, value) {
+    table.append('tr').html('<td><strong>' + key + '</strong><td>' + value);
+}
+
 //Format A
 var chart;
 nv.addGraph(function() {
@@ -5,19 +21,23 @@ nv.addGraph(function() {
                 .showDistX(true)
                 .showDistY(true)
                 .useVoronoi(true)
-                .color(d3.scale.category10().range())
                 .transitionDuration(300)
                 ;
 
-  chart.xAxis.tickFormat(d3.format('.02f'));
-  chart.yAxis.tickFormat(d3.format('.02f'));
-  chart.tooltipContent(function(key) {
-      return '<h2>' + key + '</h2>';
+  chart.xAxis.tickFormat(d3.format('.02f')).axisLabel('Floor Area [sf]');
+  chart.yAxis.tickFormat(d3.format('.02f')).axisLabel('Energy Use Intensity [kBTU/yr/sf]');
+  chart.tooltipContent(function(key, x, y, e, graph) {
+      var details = e.series.values[e.pointIndex].details;
+      show_details(details);
+      console.log(details);
+      return '<h2>' + details.FACILITY_DESCRIPTION + '</h2>';
   });
-
-  d3.select('#eui-vs-sf svg')
-      .datum(randomData(4,40))
-      .call(chart);
+  
+  d3.csv("Benchmarking_Data_Public.csv", function(data) {
+      d3.select('#eui-vs-sf svg')
+          .datum([{key: "Municipal Buildings", values: data.map(function(d) {return {x: +d.BLDG_FLOOR_AREA, y: +d.SITE_EUI, details: d};})}])
+          .call(chart);
+  });
 
   nv.utils.windowResize(chart.update);
 
@@ -25,28 +45,3 @@ nv.addGraph(function() {
 
   return chart;
 });
-
-
-function randomData(groups, points) { //# groups,# points per group
-  var data = [],
-      shapes = ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
-      random = d3.random.normal();
-
-  for (i = 0; i < groups; i++) {
-    data.push({
-      key: 'Group ' + i,
-      values: []
-    });
-
-    for (j = 0; j < points; j++) {
-      data[i].values.push({
-        x: random(), 
-        y: random(), 
-        size: Math.random(), 
-        shape: shapes[j % 6]
-      });
-    }
-  }
-
-  return data;
-}
