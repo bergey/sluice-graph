@@ -15,7 +15,7 @@ nv.addGraph(function() {
       return '<h2>' + key + '</h2>';
   });
 
-  d3.select('#test1 svg')
+  d3.select('#eui-vs-sf svg')
       .datum(randomData(4,40))
       .call(chart);
 

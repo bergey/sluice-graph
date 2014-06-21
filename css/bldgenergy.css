@@ -25,6 +25,6 @@ div {
   margin: 0;
 }
 
-#test1 svg {
+.graph svg {
   height: 500px;
 }
