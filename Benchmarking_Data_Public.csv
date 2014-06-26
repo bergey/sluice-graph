@@ -1,4 +1,4 @@
-oFACILITY_DESCRIPTION,ASSET_ADDR,ASSET_ZIP,ASSET_ID,BLDG_FLOOR_AREA,YEAR_BUILT,PROPERTY_TYPE,SECTOR,NUMBER_OF_BUILDINGS,ENERGY_STAR_SCORE,SITE_EUI,WEATHER_NORMALIZED_SITE_EUI,SOURCE _EUI,WEATHER_NORMALIZED_SOURCE_EUI,PERCENT_BETTER,TOTAL_GHG_EMISSIONS,ELECTRIC_USE,GAS_USE,STEAM_USE,OIL_USE
+FACILITY_DESCRIPTION,ASSET_ADDR,ASSET_ZIP,ASSET_ID,BLDG_FLOOR_AREA,YEAR_BUILT,PROPERTY_TYPE,SECTOR,NUMBER_OF_BUILDINGS,ENERGY_STAR_SCORE,SITE_EUI,WEATHER_NORMALIZED_SITE_EUI,SOURCE _EUI,WEATHER_NORMALIZED_SOURCE_EUI,PERCENT_BETTER,TOTAL_GHG_EMISSIONS,ELECTRIC_USE,GAS_USE,STEAM_USE,OIL_USE
 Curran-Fromhold Correctional Facility,7901 State Road,22031,395,436250,1995,Prison/Incarceration,Correctional Facilities,1,N/A,277.8,278.1,536.8,531.6,216,10800.9,14993930,700232.5,N/A,0.0
 Holmesburg Complex,8215 Torresdale Avenue,19136,64,716651,1896,Prison/Incarceration,Correctional Facilities,3,N/A,13.7,14.4,23.6,24.4,-80.8,757.5,929333,65236.9,N/A,129784.9
 House of Correction Complex,8003 State Road,19136,397,830754,1927,Prison/Incarceration,Correctional Facilities,5,N/A,138,145.5,204,211.8,65.7,7812.1,6879149,911908.0,N/A,N/A
@@ -124,7 +124,6 @@ Northcentral Service / Garage 241,2600 Glenwood Avenue,19132,818,32682,1954,"Rep
 Northwest Transfer Station and Fleet Shop 225,5201 Umbria St And Domino Lane,19128,1143,37841,1959,"Repair Services (Vehicle, Shoe, Locksmith, etc.)",Maintenance Facilities and Warehouses,2,N/A,215.4,227.7,376.5,390.7,275.3,753.1,827522,N/A,N/A,5328915.5
 Police Tow Squad,4290-98 Macalester St At Whitaker,19124,788,21970,1960,"Repair Services (Vehicle, Shoe, Locksmith, etc.)",Maintenance Facilities and Warehouses,1,N/A,113.2,112.7,199,197.4,98.2,230.3,255986,N/A,N/A,1613500.3
 Traffic Engineering Shop,4501 G ST,22031,929,22398,1960,"Repair Services (Vehicle, Shoe, Locksmith, etc.)",Maintenance Facilities and Warehouses,1,N/A,154.3,157.9,275,277,174.1,286.8,355159,22431.0,N/A,N/A
-Undisclosed Facility,N/A,N/A,N/A,N/A,N/A,N/A,Maintenance Facilities and Warehouses,1,50,22.2,22.2,69.6,69.6,0,148.9,344517,N/A,N/A,0.0
 Afro-American Historical Cultural Museum,7th &amp; Arch Streets,19106,391,32100,1750,Museum,Museums,1,N/A,114.2,116.4,263.9,261,210.3,404.4,614285,N/A,1570110.0,N/A
 Atwater Kent Museum,13-17 S 7th St,19106,979,14801,1938,Museum,Museums,1,N/A,218.6,218.6,478.5,478.5,462,349.2,482546,N/A,1589213.9,N/A
 Firefighter's Hall,4th &amp; Arch Streets,19106,347,9436,1968,Museum,Museums,1,N/A,280.3,285.6,624.4,624.4,633.8,250.0,436824,11544.4,N/A,N/A
@@ -154,7 +153,6 @@ Philadelphia Nursing Home,2300 Poplar St.,19130,853,347543,1950,Senior Care Comm
 Police Academy and Campus Facilities,8405 State Road,19136,69,24593,1953,Other - Public Services,Other Facilities,5,N/A,191.2,192.9,588.1,593.5,378,577.6,1336774,N/A,N/A,140622.0
 Police Forensic Science Center,843-849 North 8th Street,19123,179,40000,1923,Laboratory,Other Facilities,1,N/A,400.9,399.1,854.9,842.3,594.8,1462.0,2434200,77295.3,N/A,N/A
 Stenton Shelter Supportive Housing,1300 East Tulpehocken Street,19138,832,33998,1959,Multifamily Housing,Other Facilities,1,N/A,289.6,300.6,441.4,453,N/A,686.9,654934,76102.8,N/A,N/A
-Undisclosed Facility,N/A,N/A,N/A,N/A,N/A,N/A,Other Facilities,1,N/A,84.6,85.8,219.9,222.9,N/A,432.3,872800,10393.1,N/A,N/A
 12th Police District / Engine 40,6458 Woodland Avenue,19142,246,29735,1955,Police Station,Police Stations,2,N/A,85,88.3,155.2,156.8,26.1,203.2,274748,15913.4,N/A,N/A
 14th Police District,43 W. Haines Street,19144,743,12035,1950,Police Station,Police Stations,1,N/A,73.5,76.2,145.7,147.4,18.4,76.0,115730,4893.3,N/A,N/A
 16th Police District,400 N. 39th Street,19104,439,15814,1950,Police Station,Police Stations,1,N/A,104.4,108.4,206.4,208.6,67.6,141.5,214450,9200.6,N/A,N/A
