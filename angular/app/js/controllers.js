@@ -5,8 +5,8 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-    .controller('BuildingList', ['$scope', '$http', 
-                                 function($scope, $http) {
+    .controller('BuildingList', ['$scope', '$http', 'filterBldgsFilter',
+                                 function($scope, $http, filterBldgsFilter) {
                                      $http.get('Benchmarking_Data_Public.json').success(function(data) {
                                          // $scope.buildings=_.map(data, function(d) {
                                          //     d.eui = +d.SITE_EUI;
@@ -24,11 +24,7 @@ angular.module('myApp.controllers', [])
                                          $scope.sfGraphMin = $scope.sfMin;
                                          $scope.sfMax = _.max(_.map(data, function(d) {return d.BLDG_FLOOR_AREA;}));
                                          $scope.sfGraphMax = $scope.sfMax;
-                                         $scope.filterBldgs = function(sfMin, sfMax, sectors) {
-                                             return function(d) { 
-                                                 return sfMin < d.BLDG_FLOOR_AREA && d.BLDG_FLOOR_AREA < sfMax && sectors[d.SECTOR]; 
-                                             }
-                                         };
+                                         $scope.displayedBuildings = filterBldgsFilter($scope.buildings, $scope.sfMin, $scope.sfMax, $scope.sectors);
                                      });
                                  }])
     .controller('MyCtrl1', ['$scope', function($scope) {

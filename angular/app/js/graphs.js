@@ -29,6 +29,16 @@ function scatterplot(config) {
     var element = null;
     var xKey = 'x';
     var yKey = 'y';
+    var svg = null;
+    var initialized = false;
+
+    function init() {
+        svg = d3.select(element)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    }
 
     function render() {
         // Derived values, cannot be directly overridden
@@ -42,15 +52,14 @@ function scatterplot(config) {
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left");
+        
+        x.domain(d3.extent(datajson, _.property(xKey))).nice();
+        y.domain(d3.extent(datajson, _.property(yKey))).nice();
 
-        var svg = d3.select(element)
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        if (!initialized) { init(); }
 
-        x.domain(d3.extent(datajson, function(d) { return d[xKey]; })).nice();
-        y.domain(d3.extent(datajson, function(d) { return d[yKey]; })).nice();
+        // delete axes in case domain has changed
+        svg.selectAll(".axis").remove(); 
 
         svg.append("g")
             .attr("class", "x axis")
@@ -74,14 +83,18 @@ function scatterplot(config) {
             .style("text-anchor", "end")
             .text(yAxisLabel);
 
-        svg.selectAll(".dot")
-            .data(datajson)
-            .enter().append("circle")
+        var dots = svg.selectAll(".dot") .data(datajson);
+        
+        dots.enter()
+            .append("circle")
             .attr("class", "dot")
             .attr("r", 2)
-            .attr("cx", function(d) { return x(d[xKey]); })
+            
+        dots.attr("cx", function(d) { return x(d[xKey]); })
             .attr("cy", function(d) { return y(d[yKey]); })
             .style("fill", "blue"); // TODO move this into CSS
+
+        dots.exit().remove()
     };
 
     render.config = function(config) {

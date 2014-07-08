@@ -19,8 +19,10 @@ angular.module('myApp.directives', [])
                 // TODO understand actual calling convention here
                 // Should this work on every element?
                 var plot = scatterplot(scope).xKey(attrs.xkey).yKey(attrs.ykey).xAxisLabel(attrs.xaxislabel).yAxisLabel(attrs.yaxislabel);
-                plot.element('#'+elem[0].id);
-                plot();
+                plot.element(elem[0]);
+                scope.$watch('datajson', function(newData, oldData) {
+                    plot.datajson(newData)();
+                })
             }
         };
     });
