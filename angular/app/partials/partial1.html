@@ -1,5 +1,5 @@
 <svg ng-attr-width="{{width}}" ng-attr-height="{{height}}">
-  <g class="graph" fill="blue">
+  <g class="graph" fill="blue" ng-attr-transform="translate({{marginLeft}},{{marginTop}})">
     <circle ng-repeat="p in points" ng-attr-cx="{{p.x}}" ng-attr-cy="{{p.y}}" r=2></circle>
   </g>
 </svg>
