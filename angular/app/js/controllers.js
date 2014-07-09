@@ -25,6 +25,11 @@ angular.module('myApp.controllers', [])
                                          $scope.sfMax = _.max(_.map(data, function(d) {return d.BLDG_FLOOR_AREA;}));
                                          $scope.sfGraphMax = $scope.sfMax;
                                          $scope.displayedBuildings = filterBldgsFilter($scope.buildings, $scope.sfMin, $scope.sfMax, $scope.sectors);
+                                         $scope.circles = [
+                                             {'x': 15, 'y': 20, 'r':3},
+                                             {'x': 35, 'y': 60, 'r':2},
+                                             {'x': 55, 'y': 10, 'r':4},
+                                         ];
                                      });
                                  }])
     .controller('MyCtrl1', ['$scope', function($scope) {

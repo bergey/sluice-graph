@@ -1,1 +1,5 @@
-<svg ngd3-scatter datajson="buildings|filterBldgs:sfMin:sfMax:sectors" xAxisLabel="Floor Area [sf]" yAxisLabel="Energy Use Intensity [kBTU/yr/sf]" xKey="BLDG_FLOOR_AREA" yKey="SITE_EUI" id="eui-vs-sf"></svg>
+<svg width=400 height=400>
+  <g> <!-- data area -->
+    <circle ng-repeat="d in buildings:" ng-attr-cx="{{d.x}}" ng-attr-cy="{{d.y}}" ng-attr-r="{{d.r}}"></circle>
+  </g>
+</svg>
