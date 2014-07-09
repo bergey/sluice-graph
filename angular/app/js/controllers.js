@@ -1,4 +1,4 @@
-/* global _ */
+/* global _, d3 */
 
 'use strict';
 
@@ -16,7 +16,7 @@ angular.module('myApp.controllers', [])
                                          $scope.buildings = data;
                                          $scope.sectors = {};
                                          _.each(data, function(d) {
-                                             if (d.SECTOR != "" && ! _.has($scope.sectors, d.SECTOR)) {
+                                             if (d.SECTOR !== "" && ! _.has($scope.sectors, d.SECTOR)) {
                                                  $scope.sectors[d.SECTOR] = true;
                                              }
                                         });
@@ -27,8 +27,15 @@ angular.module('myApp.controllers', [])
                                          $scope.filterBldgs = function(sfMin, sfMax, sectors) {
                                              return function(d) { 
                                                  return sfMin < d.BLDG_FLOOR_AREA && d.BLDG_FLOOR_AREA < sfMax && sectors[d.SECTOR]; 
-                                             }
+                                             };
                                          };
+                                         $scope.width = 800;
+                                         $scope.height = 400;
+                                         var x = d3.scale.linear().range([0,$scope.width]).domain([$scope.sfMin, $scope.sfMax]);
+                                         var y = d3.scale.linear().range([$scope.height,0]).domain(d3.extent(data, _.property("SITE_EUI")));
+                                         $scope.points = _.map(data, function(d) {
+                                             return { "x": x(d.BLDG_FLOOR_AREA), "y": y(d.SITE_EUI) };
+                                         });
                                      });
                                  }])
     .controller('MyCtrl1', ['$scope', function($scope) {
