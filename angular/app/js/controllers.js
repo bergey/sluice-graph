@@ -23,26 +23,32 @@ angular.module('myApp.controllers', [])
                   $scope.sfGraphMin = $scope.sfMin;
                   $scope.sfMax = _.max(_.map(data, function(d) {return d.BLDG_FLOOR_AREA;}));
                   $scope.sfGraphMax = $scope.sfMax;
-                  $scope.filterBldgs = function(sfMin, sfMax, sectors) {
-                      return function(d) {
-                          return sfMin < d.BLDG_FLOOR_AREA && d.BLDG_FLOOR_AREA < sfMax && sectors[d.SECTOR];
-                      };
-                  };
                   $scope.width = 800;
                   $scope.height = 400;
                   $scope.marginLeft = 25;
                   $scope.marginBottom = 25;
                   $scope.marginRight = 25;
                   $scope.marginTop = 25;
+                  var filterBldgs = function(sfMin, sfMax, sectors) {
+                      return function(d) {
+                          return sfMin < d.BLDG_FLOOR_AREA && d.BLDG_FLOOR_AREA < sfMax && sectors[d.SECTOR];
+                      };
+                  };
                   var x = d3.scale.linear().range(
                       [ 0, $scope.width-$scope.marginLeft-$scope.marginRight])
                       .domain([$scope.sfMin, $scope.sfMax]);
                   var y = d3.scale.linear().range(
                       [ $scope.height-$scope.marginTop-$scope.marginBottom, 0])
                       .domain(d3.extent(data, _.property("SITE_EUI")));
-                  $scope.points = _.map(data, function(d) {
-                      return { "x": x(d.BLDG_FLOOR_AREA), "y": y(d.SITE_EUI) };
-                  });
+                  $scope.points = _.map(
+                      _.filter(data, filterBldgs($scope.sfMin, $scope.sfMax, $scope.sectors)),
+                      function(d) {
+                          return {
+                              "x": x(d.BLDG_FLOOR_AREA),
+                              "y": y(d.SITE_EUI) ,
+                              "id": d.ASSET_ID
+                          };
+                      });
               });
           }])
     .controller('euiSfCtrl', ['$scope', function($scope) {
