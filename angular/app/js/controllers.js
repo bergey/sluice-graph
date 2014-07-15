@@ -5,10 +5,32 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
+    .filter('filterBldgs', function () {
+        return function(bldgs, sfMin, sfMax, sectors) {
+            return _.filter(bldgs,  function(d) {
+                return sfMin < d.BLDG_FLOOR_AREA && d.BLDG_FLOOR_AREA < sfMax && sectors[d.SECTOR];
+            });
+        };})
+    .filter('toPoint', function () {
+        return function(bldgs,width,height,left,right,top,bottom) {
+            var x = d3.scale.linear()
+                .range([ 0, width - left - right])
+                .domain(d3.extent(bldgs, _.property("BLDG_FLOOR_AREA")));
+            var y = d3.scale.linear()
+                .range([ height - top - bottom, 0])
+                .domain(d3.extent(bldgs, _.property("SITE_EUI")));
+            var ret =  _.map(bldgs, function(d) {
+                return {
+                    "x": x(d.BLDG_FLOOR_AREA),
+                    "y": y(d.SITE_EUI) ,
+                    "id": d.ASSET_ID
+                };});
+            return ret;
+            };})
     .controller(
         'BuildingList',
-        [ '$scope', '$http',
-          function($scope, $http) {
+        [ '$scope', '$http', 'filterBldgsFilter',
+          function($scope, $http, filterBldgsFilter) {
               $http.get('Benchmarking_Data_Public.json').success(function(data) {
                   $scope.buildings = data;
                   // populate sectors checkboxes with fields appearing in data
@@ -29,26 +51,6 @@ angular.module('myApp.controllers', [])
                   $scope.marginBottom = 25;
                   $scope.marginRight = 25;
                   $scope.marginTop = 25;
-                  var filterBldgs = function(sfMin, sfMax, sectors) {
-                      return function(d) {
-                          return sfMin < d.BLDG_FLOOR_AREA && d.BLDG_FLOOR_AREA < sfMax && sectors[d.SECTOR];
-                      };
-                  };
-                  var x = d3.scale.linear().range(
-                      [ 0, $scope.width-$scope.marginLeft-$scope.marginRight])
-                      .domain([$scope.sfMin, $scope.sfMax]);
-                  var y = d3.scale.linear().range(
-                      [ $scope.height-$scope.marginTop-$scope.marginBottom, 0])
-                      .domain(d3.extent(data, _.property("SITE_EUI")));
-                  $scope.points = _.map(
-                      _.filter(data, filterBldgs($scope.sfMin, $scope.sfMax, $scope.sectors)),
-                      function(d) {
-                          return {
-                              "x": x(d.BLDG_FLOOR_AREA),
-                              "y": y(d.SITE_EUI) ,
-                              "id": d.ASSET_ID
-                          };
-                      });
               });
           }])
     .controller('euiSfCtrl', ['$scope', function($scope) {
