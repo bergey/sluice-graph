@@ -18,10 +18,8 @@ function table_row(table, key, value) {
 var chart;
 nv.addGraph(function() {
   chart = nv.models.scatterChart()
-                .showDistX(true)
-                .showDistY(true)
                 .useVoronoi(true)
-                .transitionDuration(300)
+                .transitionDuration(100)
                 ;
 
   chart.xAxis.tickFormat(d3.format('.02f')).axisLabel('Floor Area [sf]');
@@ -29,8 +27,7 @@ nv.addGraph(function() {
   chart.tooltipContent(function(key, x, y, e, graph) {
       var details = e.series.values[e.pointIndex].details;
       show_details(details);
-      console.log(details);
-      return '<h2>' + details.FACILITY_DESCRIPTION + '</h2>';
+      return '';
   });
   
   d3.csv("Benchmarking_Data_Public.csv", function(data) {
