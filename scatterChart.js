@@ -15,16 +15,16 @@ function table_row(table, key, value) {
 }
 
 var filterBldgs = function() {
-    f.minSF = 0;
-    f.maxSF = 1e6;
-    f.sectors = {};
+    var minSF = 0;
+    var maxSF = 1e6;
+    var sectors = {};
 
-    f = function(d) {
-        return minSF <= d.x && d.x <= maxSF && sectors[d.details.SECTOR];
+    function f(d) {
+        return minSF <= d.x && d.x <= maxSF;
     }
 
     f.minSF = function (v) {
-        if !arguments.length {
+        if (!arguments.length) {
             return minSF;
         } else {
             minSf = v;
@@ -32,7 +32,7 @@ var filterBldgs = function() {
         }};
 
     f.maxSF = function(v) {
-        if !arguments.length {
+        if (!arguments.length) {
             return maxSF;
         } else {
             maxSF = v;
@@ -40,7 +40,7 @@ var filterBldgs = function() {
         }};
 
     f.sectors = function(v) {
-        if !arguments.length {
+        if (!arguments.length) {
             return sectors;
         } else {
             sectors = v;
@@ -54,6 +54,7 @@ var filterBldgs = function() {
 var chart;
 nv.addGraph(function() {
   chart = nv.models.scatterChart()
+        .useVoronoi(false)
         .transitionDuration(100)
     ;
 
@@ -66,7 +67,8 @@ nv.addGraph(function() {
   });
   
   d3.csv("Benchmarking_Data_Public.csv", function(data) {
-      chart.pointActive(filterBldgs().minSF(d3.min(
+      // chart.pointActive(filterBldgs().
+      chart.xDomain(d3.extent(data, function(d) {return +d.BLDG_FLOOR_AREA;}));
       d3.select('#eui-vs-sf svg')
           .datum([{key: "Municipal Buildings", values: data.map(function(d) {return {x: +d.BLDG_FLOOR_AREA, y: +d.SITE_EUI, details: d};})}])
           .call(chart);
@@ -79,5 +81,17 @@ nv.addGraph(function() {
   return chart;
 });
 
-d3.select('#minSF').on('change', function(val) {
+d3.select('#minSF').on('change', function() {
+    var d = chart.xDomain();
+    d[0] = +this.value;
+    chart.xDomain(d);
+    chart.update();
+});
     
+d3.select('#maxSF')
+    .on('change', function() {
+        var d = chart.xDomain();
+        d[1] = +this.value;
+        chart.xDomain(d);
+        chart.update();
+    });
