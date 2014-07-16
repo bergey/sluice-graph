@@ -1,44 +1,27 @@
-"use strict;"
+/* global React, d3, document, setInterval */
 
-var r = React.DOM;
+(function () {
+    "use strict";
 
+    var r = React.DOM;
 
-var LikeButton = React.createClass({
-    getInitialState: _.constant( {liked: false} ),
-    handleClick: function(event) {
-        this.setState( {liked: !this.state.liked} )
-    },
-    render: function() {
-        var text = this.state.liked ? 'like' : 'unlike';
-        return(r.p({onClick: this.handleClick}, 'You ', text, ' this.  Click to toggle.'))
-    }
-});
+    var svgTest = React.createClass({
+        render: function() {
+            return r.svg(
+                {},
+                r.path({
+                    d: d3.svg.line()([[10,10],[30,10], [30,30], [10,30], [10,10]])
+                }),
+                r.circle({
+                    cx: 20,
+                    cy: 20,
+                    r: 10,
+                    fill: 'blue'})
+            );}});
 
-var HelloWorld = React.createClass({
-    render: function() {
-        return r.div(
-            {},
-            r.p({}, 'Hello, ', this.props.name, '!'),
-            r.p({}, 'It is ', this.props.date.toTimeString()),
-            LikeButton()
-        );
-    }});
-
-var SvgTest = React.createClass({
-    render: function() {
-        return r.svg(
-            {},
-            r.circle({
-                cx: 20,
-                cy: 20,
-                r: 10,
-                fill: 'blue'
-            })
-        )
-    }
-});
-setInterval(function() {
-    React.renderComponent(
-        SvgTest(),
-        document.getElementById('example'))
-}, 500);
+    setInterval(function() {
+        React.renderComponent(
+            svgTest(),
+            document.getElementById('example'));
+    }, 500);
+})();
