@@ -24,10 +24,21 @@ var HelloWorld = React.createClass({
         );
     }});
 
+var SvgTest = React.createClass({
+    render: function() {
+        return r.svg(
+            {},
+            r.circle({
+                cx: 20,
+                cy: 20,
+                r: 10,
+                fill: 'blue'
+            })
+        )
+    }
+});
 setInterval(function() {
     React.renderComponent(
-        HelloWorld(
-            {'name': 'Daniel',
-             'date': new Date()}),
-            document.getElementById('example'))
+        SvgTest(),
+        document.getElementById('example'))
 }, 500);
