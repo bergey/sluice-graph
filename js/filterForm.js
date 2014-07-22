@@ -30,42 +30,21 @@ var filterForm = (function() {
                          numRange({
                              text: "Floor area",
                              unit: "square feet",
-                             min: this.state.minSF,
-                             max: this.state.maxSF,
-                             minChange: this.setMinSF,
-                             maxChange: this.setMaxSF,
+                             min: this.props.minSF,
+                             max: this.props.maxSF,
+                             minChange: this.props.setMinSF,
+                             maxChange: this.props.setMaxSF,
                          }),
                          numRange({
                              text: "Energy Use Intensity",
                              unit: "kBTU/sf/yr",
-                             min: this.state.minEui,
-                             max: this.state.maxEui,
-                             minChange: this.setMinEui,
-                             maxChange: this.setMaxEui
+                             min: this.props.minEui,
+                             max: this.props.maxEui,
+                             minChange: this.props.setMinEui,
+                             maxChange: this.props.setMaxEui
                          }));
         },
 
-        getInitialState: function() {
-            return {
-                minSF: 0,
-                maxSF: 20000,
-                minEui: 0,
-                maxEui: 3000
-            }
-        },
-
-        setMinSF: function(event) {
-            this.setState({minSF: parseInt(event.target.value)});
-        },
-        setMaxSF: function(event) {
-            this.setState({maxSF: parseInt(event.target.value)});
-        },
-        setMinEui: function(event) {
-            this.setState({minEui: parseInt(event.target.value)});
-        },
-        setMaxEui: function(event) {
-            this.setState({maxEui: parseInt(event.target.value)});
-        }
     });
     
     return form;

@@ -10,6 +10,6 @@
             //     data: _.map([[0,0], [2,5], [10,5], [15,20]], function(d) {
             //         return {'x': d[0], 'y': d[1]};
             //     })}),
-        filterForm(),
+        filterGraph(),
         document.getElementById('example'));
 })();
