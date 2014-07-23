@@ -5,49 +5,73 @@ var scatterPlot = (function() {
 
     var r = React.DOM;
 
-    var plot = React.createClass({
-        render: function() {
-            var props = this.props; //  _ methods bind other *this*
+    var extent = function(data, key) {
+        var a = d3.extent(data, key);
+        return {
+            min: a[0],
+            max: a[1]
+        };
+    };
 
-            // if props is not set, default scale is linear,
-            // fits range of data to the available space (without padding)
-            var cx, cy;
-            if (props.xScale !== null) {
-                cx = props.xScale;
-            } else {
-                cx = d3.scale.linear()
-                    .domain(d3.extent(props.data, props.xKey))
-                    .range([0, props.width - props.margin.left - props.margin.right]);
-            }
-            if (props.yScale !== null) {
-                cy = props.yScale;
-            } else {
-                cy = d3.scale.linear()
-                    .domain(d3.extent(props.data, props.yKey))
-                    .range([0, props.height - props.margin.top - props.margin.bottom]);
-            }
-                        
-            return r.svg(
-                { width: props.width,
-                  height: props.height},
+    var defaultScale = function(data, w) {
+        return d3.scale.linear()
+            .domain([data.min, data.max])
+            .range([0, w]);
+    };
+
+    var translate = function(x, y) {
+        return 'translate(' + x.toString() + ',' + y.toString() + ')';
+    };
+
+    var viewport = React.createClass({
+        render: function() {
+            var props = this.props;
+            
+            return r.g(
+                { transform: props.transform},
                 _.map(props.data, function(d,i) {
                     return r.circle({
-                        cx: cx(props.xKey(d)),
-                        cy: cy(props.yKey(d)),
+                        cx: props.xScale(d),
+                        cy: props.yScale(d),
                         r: 2,
                         key: i
                     });
                 }));
+        }});
+    
+    var plot = React.createClass({
+        render: function() {
+            var props = this.props; //  _ methods bind other *this*
+
+            var viewWidth = props.width - props.margin.left - props.margin.right;
+            var viewHeight = props.height - props.margin.top - props.margin.bottom;
+
+            var cx = props.xScale(extent(props.data, props.xKey), viewWidth);
+            var cy = props.yScale(extent(props.data, props.yKey), viewHeight);
+                        
+            return r.svg(
+                { width: props.width,
+                  height: props.height},
+                viewport({
+                    xScale: _.compose(cx, props.xKey),
+                    yScale: _.compose(cy, props.yKey),
+                    transform: translate(props.margin.left, props.margin.top),
+                    data: props.data,
+                    xKey: props.xKey,
+                    yKey: props.yKey
+                }));
         },
 
-            getDefaultProps: function() {
+        getDefaultProps: function() {
                 return {
                    width: 450,
                     height: 300,
                     xKey: _.property('x'),
                     yKey: _.property('y'),
-                    xScale: null,
-                    yScale: null,
+                    // xScale and yScale are functions
+                    // xScale :: (value summary, viewport dim) -> x value -> output coördinate
+                    xScale: defaultScale,
+                    yScale: defaultScale,
                     margin: {
                         left: 20,
                         right: 20,
