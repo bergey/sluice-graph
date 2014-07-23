@@ -26,10 +26,6 @@ var scatterPlot = (function() {
                     .domain(d3.extent(props.data, props.yKey))
                     .range([0, props.height - props.margin.top - props.margin.bottom]);
             }
-            console.log(cx.domain());
-            console.log(cy.domain());
-            console.log(_.map(props.data, props.xKey));
-            console.log(_.map(props.data, props.yKey));
                         
             return r.svg(
                 { width: props.width,

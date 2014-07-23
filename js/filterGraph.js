@@ -62,7 +62,6 @@ var filterGraph = (function() {
 
     setMinSF: function(event) {
         this.setState({minSF: parseInt(event.target.value)});
-        console.log(this.state);
     },
     setMaxSF: function(event) {
         this.setState({maxSF: parseInt(event.target.value)});
