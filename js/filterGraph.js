@@ -5,12 +5,21 @@ var filterGraph = (function() {
 
     var r = React.DOM;
 
+    var filterBldgs = function(criteria) {
+        return function(d) {
+            return criteria.minSF < d.BLDG_FLOOR_AREA
+                && d.BLDG_FLOOR_AREA < criteria.maxSF
+                && criteria.minEui < d.SITE_EUI
+                && d.SITE_EUI < criteria.maxEui;
+        };
+    }
+
     var ret = React.createClass({
         render: function() {
             return r.div({},
                          // graph, fed data as props with filter
                          scatterPlot({
-                             data: this.state.data,
+                             data: _.filter(this.state.data, filterBldgs(this.state)),
                              xKey: _.property('BLDG_FLOOR_AREA'),
                              yKey: _.property('SITE_EUI')
                          }),
