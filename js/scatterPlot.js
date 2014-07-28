@@ -1,6 +1,6 @@
-/* global React, d3, document, setInterval */
+/* global document, setInterval */
 
-var scatterPlot = (function() {
+define(['react', 'd3', 'underscore'], function(React, d3, _) {
     "use strict";
 
     var r = React.DOM;
@@ -117,7 +117,7 @@ var scatterPlot = (function() {
     // yKey: a function to pick the y attribute : d -> Num (default _.property('y'))
     // xScale: a function to scale the x coord : Extent -> width  -> Num (default linear)
     // yScale:  a function to scale the y coord : Extent -> height  -> Num (default linear)
-    var plot = React.createClass({
+    return React.createClass({
         displayName: 'scatterPlot',
         render: function() {
             var props = this.props; //  _ methods bind other *this*
@@ -166,6 +166,4 @@ var scatterPlot = (function() {
                     data: []
                 };
             }});
-
-    return plot;
-})();
+});

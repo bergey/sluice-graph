@@ -1,4 +1,4 @@
-require.config({
+requirejs.config({
   shim: {
 
   },
@@ -12,3 +12,5 @@ require.config({
 
   ]
 });
+
+requirejs(['main']);

@@ -1,6 +1,6 @@
-/* global React, document, setInterval */
+/* global document, setInterval */
 
-var filterForm = (function() {
+ define(['react'], function(React) {
     "use strict";
 
     var r = React.DOM;
@@ -25,7 +25,7 @@ var filterForm = (function() {
         }
     });
 
-    var form = React.createClass({
+     return React.createClass({
         displayName: 'filterForm',
         render: function() {
             return r.div({},
@@ -45,9 +45,5 @@ var filterForm = (function() {
                              minChange: this.props.setMinEui,
                              maxChange: this.props.setMaxEui
                          }));
-        },
-
-    });
-    
-    return form;
-})()
+        }});
+ });

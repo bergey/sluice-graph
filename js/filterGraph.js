@@ -1,20 +1,20 @@
-/* global React, document, setInterval */
+/* global document, setInterval */
 
-var filterGraph = (function() {
+define(['react', 'filterForm', 'scatterPlot'], function (React, filterForm, scatterPlot) {
     "use strict";
 
     var r = React.DOM;
 
     var filterBldgs = function(criteria) {
         return function(d) {
-            return criteria.minSF < d.BLDG_FLOOR_AREA
-                && d.BLDG_FLOOR_AREA < criteria.maxSF
-                && criteria.minEui < d.SITE_EUI
-                && d.SITE_EUI < criteria.maxEui;
+            return criteria.minSF < d.BLDG_FLOOR_AREA &&
+                d.BLDG_FLOOR_AREA < criteria.maxSF &&
+                criteria.minEui < d.SITE_EUI &&
+                d.SITE_EUI < criteria.maxEui;
         };
-    }
+    };
 
-    var ret = React.createClass({
+    return React.createClass({
         render: function() {
             return r.div({},
                          // graph, fed data as props with filter
@@ -50,30 +50,29 @@ var filterGraph = (function() {
             }.bind(this));
         },
 
-    getInitialState: function() {
-        return {
-            minSF: 0,
-            maxSF: 20000,
-            minEui: 0,
-            maxEui: 3000,
-            data: _.map([[0,0], [2,5], [10,5], [15,20]], function(d) {
-                return {'x': d[0], 'y': d[1]};
-            })}},
+        getInitialState: function() {
+            return {
+                minSF: 0,
+                maxSF: 20000,
+                minEui: 0,
+                maxEui: 3000,
+                data: _.map([[0,0], [2,5], [10,5], [15,20]], function(d) {
+                    return {'x': d[0], 'y': d[1]};
+                })};
+        },
 
-    setMinSF: function(event) {
-        this.setState({minSF: parseInt(event.target.value)});
-    },
-    setMaxSF: function(event) {
-        this.setState({maxSF: parseInt(event.target.value)});
-    },
-    setMinEui: function(event) {
-        this.setState({minEui: parseInt(event.target.value)});
-    },
-    setMaxEui: function(event) {
-        this.setState({maxEui: parseInt(event.target.value)});
-    }
+        setMinSF: function(event) {
+            this.setState({minSF: parseInt(event.target.value)});
+        },
+        setMaxSF: function(event) {
+            this.setState({maxSF: parseInt(event.target.value)});
+        },
+        setMinEui: function(event) {
+            this.setState({minEui: parseInt(event.target.value)});
+        },
+        setMaxEui: function(event) {
+            this.setState({maxEui: parseInt(event.target.value)});
+        }
 
-    })
-
-    return ret;
-})()
+    });
+});
