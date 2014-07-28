@@ -6,6 +6,7 @@ var filterForm = (function() {
     var r = React.DOM;
 
     var numRange = React.createClass({
+        displayName: 'numRange',
         render: function() {
             return r.div({},
                          this.props.text + " between ",
@@ -25,6 +26,7 @@ var filterForm = (function() {
     });
 
     var form = React.createClass({
+        displayName: 'filterForm',
         render: function() {
             return r.div({},
                          numRange({
