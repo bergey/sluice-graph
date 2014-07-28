@@ -15,6 +15,7 @@ define(['react', 'filterForm', 'scatterPlot'], function (React, filterForm, scat
     };
 
     return React.createClass({
+        displayName: 'filterGraph',
         render: function() {
             return r.div({},
                          // graph, fed data as props with filter
@@ -46,7 +47,14 @@ define(['react', 'filterForm', 'scatterPlot'], function (React, filterForm, scat
                 };
                 
                 if (error) return console.warn(error);
-                this.setState({data: _.map(json, numeric)});
+                var data = _.map(json, numeric);
+                this.setState({
+                    data: data,
+                    minSF: _.min(data, _.property('BLDG_FLOOR_AREA')).BLDG_FLOOR_AREA,
+                    maxSF: _.max(data, _.property('BLDG_FLOOR_AREA')).BLDG_FLOOR_AREA,
+                    minEui: _.min(data, _.property('SITE_EUI')).SITE_EUI,
+                    maxEui: _.max(data, _.property('SITE_EUI')).SITE_EUI
+                });
             }.bind(this));
         },
 
