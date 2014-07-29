@@ -1,4 +1,5 @@
 requirejs.config({
+  deps: ['main'],
   shim: {
 
   },
@@ -12,5 +13,3 @@ requirejs.config({
 
   ]
 });
-
-requirejs(['main']);
