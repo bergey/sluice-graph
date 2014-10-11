@@ -16,14 +16,24 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  -- exposed-modules:     
+  exposed-modules:     
+    Sluice,
+    Sluice.Axis,
+    Sluice.Canvas,
+    Sluice.Scale
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8,
     blank-canvas >= 0.5,
+    data-default-class, 
+    intervals >= 0.7,
+    text >= 1.0,
     lens >= 4.0,
+    linear,
+    colour,
+    semigroups,
     vector
-  -- hs-source-dirs:      
+  hs-source-dirs:      src/
   default-language:    Haskell2010
 
 executable demo
@@ -32,6 +42,8 @@ executable demo
   default-language:    Haskell2010
   ghc-options: -threaded
   build-depends:       base >=4.7 && <4.8,
-    blank-canvas >= 0.5
+    blank-canvas >= 0.5,
+    sluice,
+    random
     -- lens >= 4.0,
     -- vector

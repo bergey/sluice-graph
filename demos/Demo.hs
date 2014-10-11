@@ -3,12 +3,14 @@
 module Main where
 
 import Graphics.Blank
+import Sluice
+
+import Control.Monad
+import System.Random
 
 main :: IO ()
-main = blankCanvas 3000 $ \context -> do
-    send context $ do
-        moveTo(50,50)
-        lineTo(200,100)
-        lineWidth 10
-        strokeStyle "red"
-        stroke()
+main = do
+    xVals <- replicateM 100 $ randomRIO (0,100)
+    yVals <- replicateM 100 $ randomRIO (0,1000)
+    blankCanvas 3000 $ \context ->
+        send context $ plot scatter (xVals, yVals)
