@@ -17,7 +17,7 @@ import Linear
 import Data.Default.Class
 import Control.Lens hiding (over)
 
-data Shape = Rect
+data Shape = Rect | Circle
 
 data Marker = Marker {
     _shape :: Shape,
@@ -29,7 +29,7 @@ data Marker = Marker {
 makeLenses ''Marker
 
 instance Default Marker where
-    def = Marker Rect 5 (opaque blue) (opaque black)
+    def = Marker Circle 5 (opaque blue) (opaque black)
 
 colorText :: RealFloat n => AlphaColour n -> Text
 colorText ac = toStrict . toLazyText $
@@ -55,6 +55,12 @@ drawMark m p = do
           translate(p ^. _x, p ^. _y)
           fillRect(-s/2, -s/2, s, s)
           strokeRect(-s/2, -s/2, s, s)
+      Circle -> saveRestore $ do
+          translate(p ^. _x, p ^. _y)
+          beginPath()
+          arc(0,0,s/2,0,2*pi,False)
+          stroke()
+          fill()
 
 drawMarks :: Marker -> [V2 Double] -> Canvas ()
 drawMarks m ps = withStyle m $ mapM_ (drawMark m) ps
