@@ -51,14 +51,12 @@ drawMark :: Marker -> V2 Double -> Canvas ()
 drawMark m p = do
     let s = (m ^. size)
     case m ^. shape of
-      Rect -> saveRestore $ do
-          translate(p ^. _x, p ^. _y)
-          fillRect(-s/2, -s/2, s, s)
-          strokeRect(-s/2, -s/2, s, s)
-      Circle -> saveRestore $ do
-          translate(p ^. _x, p ^. _y)
+      Rect -> do
+          fillRect(p ^. _x -s/2, p^. _y - s/2, s, s)
+          strokeRect(p ^. _x -s/2,p ^. _y -s/2, s, s)
+      Circle -> do
           beginPath()
-          arc(0,0,s/2,0,2*pi,False)
+          arc(p ^. _x, p ^. _y,s/2,0,2*pi,False)
           stroke()
           fill()
 
