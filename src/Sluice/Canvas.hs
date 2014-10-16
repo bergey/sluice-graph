@@ -58,3 +58,10 @@ drawMark m p = do
 
 drawMarks :: Marker -> [V2 Double] -> Canvas ()
 drawMarks m ps = withStyle m $ mapM_ (drawMark m) ps
+
+invertY :: Canvas () -> Canvas ()
+invertY c = saveRestore $ do
+    me <- myCanvasContext
+    translate(0, height me)
+    scale(1,-1)
+    c

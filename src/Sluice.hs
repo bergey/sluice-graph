@@ -39,7 +39,7 @@ instance Default ScatterPlot where
     def = scatter
 
 instance Plot ScatterPlot where
-    plot p = do
+    plot p = invertY $ do
         me <- C.myCanvasContext
         let
             dataScale = V2 (_forward $ _scale (_xAxis p) xDomain) (_forward $ _scale (_yAxis p) yDomain)
