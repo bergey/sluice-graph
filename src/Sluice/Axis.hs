@@ -11,7 +11,7 @@ import Sluice.Scale
 
 import Data.Default.Class
 import Data.Text (Text, pack)
-import Numeric.Interval
+import Numeric.Interval.Kaucher
 import Data.Foldable
 import Data.List
 import Data.Traversable
@@ -59,7 +59,7 @@ calcDomain :: Ord a => [a] -> Interval a
 calcDomain = foldl1' hull . map singleton
 
 instance Default RealAxis where
-    def = RealAxis def threeTicks calcDomain 5 10 "" 12
+    def = RealAxis linearScale threeTicks calcDomain 5 10 "" 12
 
 axisSize :: RealAxis -> Double
 axisSize a = 2 * _textSize a + max (_majorLength a) (_minorLength a)
