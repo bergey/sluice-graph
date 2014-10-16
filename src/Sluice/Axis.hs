@@ -8,12 +8,14 @@ module Sluice.Axis where
 
 import Graphics.Blank
 import Sluice.Scale
+import Sluice.Canvas
 
 import qualified Graphics.Blank as C
 
 import Prelude hiding (mapM_)
 import Data.Default.Class
-import Data.Text (Text, pack)
+import qualified Data.Text as T
+import Data.Text (Text)
 import Numeric.Interval.Kaucher
 import Data.Foldable
 import Data.List
@@ -28,7 +30,7 @@ type Ticks a = [(a, Maybe Text)]
 type TickFun a = Interval a -> Ticks a
 
 withShow :: Show a => a -> (a, Maybe Text)
-withShow a = (a, Just . pack . show $ a)
+withShow a = (a, Just . T.pack . show $ a)
 
 threeTicks :: (Show a, Fractional a) => TickFun a
 threeTicks i = fmap withShow [inf i, midpoint i, sup i]
@@ -97,5 +99,13 @@ drawTick ax (x, label) = let
         Nothing -> _minorLength ax
         Just _ -> _majorLength ax
     in do
+    -- tick mark
     C.moveTo (x, baseline)
     C.lineTo (x, baseline - tickLength)
+    -- tick label
+    case label of
+     Just txt -> do
+         (TextMetrics w) <- measureText txt
+         -- invertY $ fillText (txt, x - w / 2, baseline - tickLength - _textSize ax)
+         drawText txt (x-w/2) (baseline - tickLength - _textSize ax)
+     _-> return ()

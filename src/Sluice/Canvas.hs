@@ -69,3 +69,10 @@ invertY c = saveRestore $ do
     translate(0, height me)
     scale(1,-1)
     c
+
+-- | drawText compensates for the flipped coordinate system of Canvas
+drawText :: Text -> Double -> Double -> Canvas ()
+drawText txt x y = saveRestore $ do
+    translate(x,y)
+    scale(1,-1)
+    fillText(txt,0,0)
