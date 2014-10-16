@@ -32,8 +32,26 @@ type TickFun a = Interval a -> Ticks a
 withShow :: Show a => a -> (a, Maybe Text)
 withShow a = (a, Just . T.pack . show $ a)
 
-threeTicks :: (Show a, Fractional a) => TickFun a
-threeTicks i = fmap withShow [inf i, midpoint i, sup i]
+-- helper for low, mid, high
+rounder :: RealFloat a => (a -> Int) -> Int -> a -> a
+rounder f n x = fromIntegral (f $ x / 10 ** sigFigs) * 10 ** sigFigs where
+  sigFigs = fromIntegral $ l - n +1
+  l = floor $ logBase 10 x
+
+-- | @low n x@ rounds x down to the next number with n significant digits
+low :: RealFloat a => Int -> a -> a
+low = rounder floor
+
+-- | @mid n x@ rounds x to the nearest number with n significant digits
+mid :: RealFloat a => Int -> a -> a
+mid = rounder round
+
+-- | @high n x@ rounds x up to the next number with n significant digits
+high :: RealFloat a => Int -> a -> a
+high = rounder ceiling
+
+threeTicks :: (Show a, RealFloat a) => TickFun a
+threeTicks i = fmap withShow [low 2 $ inf i, mid 2 $ midpoint i, high 2 $ sup i]
 
 data RealAxis = RealAxis {
     _scale :: Interval Double -> Scale Double,
