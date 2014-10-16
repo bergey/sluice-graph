@@ -29,7 +29,7 @@ data Marker = Marker {
 makeLenses ''Marker
 
 instance Default Marker where
-    def = Marker Rect 10 (opaque blue) (opaque black)
+    def = Marker Rect 5 (opaque blue) (opaque black)
 
 colorText :: RealFloat n => AlphaColour n -> Text
 colorText ac = toStrict . toLazyText $
