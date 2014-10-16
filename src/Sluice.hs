@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Sluice where
 
@@ -8,13 +9,15 @@ import Sluice.Axis
 import Sluice.Canvas
 import Sluice.Scale
 
-import Prelude hiding (mapM_)
 import qualified Graphics.Blank as C
+
+import Prelude hiding (mapM_)
 import Control.Applicative
 import Control.Lens
 import Data.Default.Class
-import Data.Foldable
+-- import Data.Foldable
 import Linear
+-- import qualified Data.Text as T
 
 class Plot p where
     plot :: p -> C.Canvas ()
@@ -49,7 +52,9 @@ instance Plot ScatterPlot where
         -- draw data markers
         C.saveRestore $ do
             C.translate offset
-            withStyle (p ^. marker) $ mapM_ (draw $ p ^. marker) $ map (fullScale <*>) pts
+            drawMarks (p ^. marker) $ map (fullScale <*>) pts
         -- draw Axes
-            -- drawAxis $ _xAxis p
+        C.saveRestore $ do
+            C.translate (fst offset, 0)
+            drawAxis (AxisParams xDomain (fullScale ^. _x)) $ _xAxis p
             -- drawAxis $ _yAxis p

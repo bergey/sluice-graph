@@ -9,6 +9,9 @@ module Sluice.Axis where
 import Graphics.Blank
 import Sluice.Scale
 
+import qualified Graphics.Blank as C
+
+import Prelude hiding (mapM_)
 import Data.Default.Class
 import Data.Text (Text, pack)
 import Numeric.Interval.Kaucher
@@ -17,8 +20,7 @@ import Data.List
 import Data.Traversable
 import Control.Lens
 
-newtype Ticks a = Ticks [(a, Maybe Text)]
-  deriving (Foldable, Functor, Traversable)
+type Ticks a = [(a, Maybe Text)]
 
 -- | TickFun is an alias for functions which determine the tick marks
 -- on an Axis.  The parameters passed, and hence the definition, are
@@ -29,7 +31,7 @@ withShow :: Show a => a -> (a, Maybe Text)
 withShow a = (a, Just . pack . show $ a)
 
 threeTicks :: (Show a, Fractional a) => TickFun a
-threeTicks i = Ticks $ fmap withShow [inf i, midpoint i, sup i]
+threeTicks i = fmap withShow [inf i, midpoint i, sup i]
 
 data RealAxis = RealAxis {
     _scale :: Interval Double -> Scale Double,
@@ -38,8 +40,12 @@ data RealAxis = RealAxis {
     _minorLength :: Double,
     _majorLength :: Double,
     _label :: Text,
-    _textSize :: Double
+    _textSize :: Double,
+    _orientation :: Position,
+    _textAngle :: Double
     }
+
+data Position = Bottom | Top | Left | Right
 
 class Labeled a where
     label :: Lens' a Text
@@ -59,10 +65,37 @@ calcDomain :: Ord a => [a] -> Interval a
 calcDomain = foldl1' hull . map singleton
 
 instance Default RealAxis where
-    def = RealAxis linearScale threeTicks calcDomain 5 10 "" 12
+    def = RealAxis linearScale threeTicks calcDomain 5 10 "" 12 Bottom 0
 
 axisSize :: RealAxis -> Double
 axisSize a = 2 * _textSize a + max (_majorLength a) (_minorLength a)
 
-drawAxis :: RealAxis -> Canvas ()
-drawAxis _ = return ()
+data AxisParams = AxisParams {
+    _axDomain :: Interval Double,
+    _axScale :: Double -> Double
+    -- _outputScale :: Double -> Double
+    }
+
+instance Default AxisParams where
+    def = AxisParams empty id
+
+drawAxis :: AxisParams -> RealAxis -> Canvas ()
+drawAxis p ax = do  -- only Location == Bottom case
+    -- draw line length of plot
+    C.beginPath()
+    C.moveTo(0, axisSize ax)
+    C.lineTo(_axScale p . sup $ _axDomain p, axisSize ax)
+    -- draw ticks
+    mapM_ (drawTick ax) ((_ticks ax (_axDomain p)) & mapped . _1 %~ _axScale p)
+    C.stroke()
+
+-- | drawTick expects pre-scaled coordinates in its second argument
+drawTick :: RealAxis -> (Double, Maybe Text) -> Canvas ()
+drawTick ax (x, label) = let
+    baseline = axisSize ax
+    tickLength = case label of
+        Nothing -> _minorLength ax
+        Just _ -> _majorLength ax
+    in do
+    C.moveTo (x, baseline)
+    C.lineTo (x, baseline - tickLength)

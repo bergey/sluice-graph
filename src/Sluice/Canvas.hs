@@ -47,11 +47,14 @@ withStyle m c = saveRestore $ do
     strokeStyle . colorText . view lineColor $ m
     c
 
-draw :: Marker -> V2 Double -> Canvas ()
-draw m p = do
+drawMark :: Marker -> V2 Double -> Canvas ()
+drawMark m p = do
     let s = (m ^. size)
     case m ^. shape of
       Rect -> saveRestore $ do
           translate(p ^. _x, p ^. _y)
           fillRect(-s/2, -s/2, s, s)
           strokeRect(-s/2, -s/2, s, s)
+
+drawMarks :: Marker -> [V2 Double] -> Canvas ()
+drawMarks m ps = withStyle m $ mapM_ (drawMark m) ps
