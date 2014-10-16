@@ -10,9 +10,10 @@ import Graphics.Blank
 import Sluice.Scale
 
 import Data.Default.Class
-import Data.Text
+import Data.Text (Text, pack)
 import Numeric.Interval
 import Data.Foldable
+import Data.List
 import Data.Traversable
 import Control.Lens
 
@@ -31,10 +32,11 @@ threeTicks :: (Show a, Fractional a) => TickFun a
 threeTicks i = Ticks $ fmap withShow [inf i, midpoint i, sup i]
 
 data RealAxis = RealAxis {
-    _scale :: Scale Double,
+    _scale :: Interval Double -> Scale Double,
     _ticks :: TickFun Double,
-    _minorLength Double,
-    _majorLength Double,
+    _domain :: [Double] -> Interval Double,
+    _minorLength :: Double,
+    _majorLength :: Double,
     _label :: Text,
     _textSize :: Double
     }
@@ -47,13 +49,20 @@ instance Labeled RealAxis where
     label = lens _label $ \s a -> s { _label = a }
     textSize = lens _textSize $ \s a -> s {_textSize = a }
 
-makeLensesFor [("_scale", "scale"), ("_ticks", "ticks")] ''RealAxis
+makeLensesFor [("_scale", "scale"), ("_ticks", "ticksFun")] ''RealAxis
+
+ticks :: Setter' RealAxis (Ticks Double)
+ticks = sets (\f ax -> ax { _ticks = \i -> f . _ticks ax $ i})
+
+-- | The obvious domain function, @calcDomain xs == minimum xs .. maximum xs@.
+calcDomain :: Ord a => [a] -> Interval a
+calcDomain = foldl1' hull . map singleton
 
 instance Default RealAxis where
-    def = RealAxis def threeTicks "" 12
+    def = RealAxis def threeTicks calcDomain 5 10 "" 12
 
 axisSize :: RealAxis -> Double
-axisSize a = 2 * _textSize a + max (_majorLength p) (_minorLength p)
+axisSize a = 2 * _textSize a + max (_majorLength a) (_minorLength a)
 
 drawAxis :: RealAxis -> Canvas ()
-drawAxis a = do
+drawAxis _ = return ()

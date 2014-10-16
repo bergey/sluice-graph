@@ -14,7 +14,6 @@ import Data.Colour
 import Data.Colour.SRGB
 import Data.Colour.Names
 import Linear
-import Linear.Affine
 import Data.Default.Class
 import Control.Lens hiding (over)
 
@@ -48,7 +47,7 @@ withStyle m c = saveRestore $ do
     strokeStyle . colorText . view lineColor $ m
     c
 
-draw :: Marker -> Point V2 Double -> Canvas ()
+draw :: Marker -> V2 Double -> Canvas ()
 draw m p = do
     let s = (m ^. size)
     case m ^. shape of

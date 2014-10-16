@@ -6,21 +6,22 @@ module Sluice where
 
 import Sluice.Axis
 import Sluice.Canvas
+import Sluice.Scale
 
 import Prelude hiding (mapM_)
-import Graphics.Blank (Canvas)
+import qualified Graphics.Blank as C
+import Control.Applicative
 import Control.Lens
 import Data.Default.Class
 import Data.Foldable
 import Linear
-import Linear.Affine
 
 class Plot p where
-    plot :: p a -> a -> Canvas ()
+    plot :: p -> C.Canvas ()
 
-data ScatterPlot a = ScatterPlot {
-    _xs :: a -> [Double],
-    _ys :: a -> [Double],
+data ScatterPlot = ScatterPlot {
+    _xs :: [Double],
+    _ys :: [Double],
     _xAxis :: RealAxis,
     _yAxis :: RealAxis,
     _marker :: Marker
@@ -28,17 +29,27 @@ data ScatterPlot a = ScatterPlot {
 
 makeLenses ''ScatterPlot
 
-scatter :: Foldable f => ScatterPlot (f Double, f Double)
-scatter = ScatterPlot (toList . fst) (toList . snd) def def def
+scatter :: ScatterPlot
+scatter = ScatterPlot [] [] def def def
 
-instance Foldable f => Default (ScatterPlot (f Double, f Double)) where
+instance Default ScatterPlot where
     def = scatter
 
 instance Plot ScatterPlot where
-    plot p d = do
+    plot p = do
+        me <- C.myCanvasContext
         let
-            pts = zipWith (\x y -> P $ V2 x y) (_xs p d) (_ys p d)
-        saveRestore $ do
-            translate(axisSize $ _yAxis p, axisSize $ _xAxis p)
-            withStyle (p ^. marker) $ mapM_ (draw $ p ^. marker) pts
-        drawAxis
+            dataScale = V2 (_forward $ _scale (_xAxis p) xDomain) (_forward $ _scale (_yAxis p) yDomain)
+            outputScale = (*) <$> V2 (C.width me - fst offset) (C.height me - snd offset)
+            fullScale = liftA2 (.) outputScale dataScale
+            pts = zipWith (\x y -> V2 x y) (_xs p) (_ys p)
+            xDomain = _domain (_xAxis p) $ _xs p
+            yDomain = _domain (_yAxis p) $ _ys p
+            offset = (axisSize $ _yAxis p, axisSize $ _xAxis p)
+        -- draw data markers
+        C.saveRestore $ do
+            C.translate offset
+            withStyle (p ^. marker) $ mapM_ (draw $ p ^. marker) $ map (fullScale <*>) pts
+        -- draw Axes
+            -- drawAxis $ _xAxis p
+            -- drawAxis $ _yAxis p

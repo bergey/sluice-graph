@@ -44,6 +44,6 @@ executable demo
   build-depends:       base >=4.7 && <4.8,
     blank-canvas >= 0.5,
     sluice,
-    random
-    -- lens >= 4.0,
+    random,
+    lens >= 4.0
     -- vector
