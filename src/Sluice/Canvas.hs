@@ -4,6 +4,7 @@
 module Sluice.Canvas where
 
 import Graphics.Blank as C
+import Sluice.Util
 
 import Data.Text  (Text)
 import Data.Text.Lazy (toStrict)
@@ -84,3 +85,7 @@ moveTo (V2 x y) = C.moveTo (x,y)
 
 lineTo :: V2 Double -> Canvas ()
 lineTo (V2 x y) = C.lineTo (x,y)
+
+-- | set the font size, resetting other font parameters in the process.
+fontSize :: Double -> Canvas ()
+fontSize s = C.font $ text s <> "pt"

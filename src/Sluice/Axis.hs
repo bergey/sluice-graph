@@ -59,6 +59,8 @@ leftAxis = def
            & ticks . labelOffset .~ V2 (-5) 0
            & ticks . labelBaseline .~ C.MiddleBaseline
            & ticks . labelAnchor .~ C.RightAnchor
+           & labelAngle .~ pi / 2
+           & labelBaseline .~ C.AlphabeticBaseline
 
 topAxis :: RealAxis
 topAxis = def
@@ -93,11 +95,16 @@ drawAxis p ax = C.saveRestore $ do
     C.beginPath()
     D.moveTo $ _ticksTransform ax !* V2 0 0
     D.lineTo $ _ticksTransform ax !* V2 (_axScale p . sup $ _axDomain p) 0
-    C.textBaseline $ ax ^. ticks . labelBaseline
-    C.textAlign $ ax ^. ticks . labelAnchor
+    -- C.textBaseline $ ax ^. ticks . labelBaseline
+    -- C.textAlign $ ax ^. ticks . labelAnchor
     -- draw ticks
     mapM_ (drawTick ax) ((ax ^. ticks . ticksOver (_axDomain p)) & mapped . _1 %~ _axScale p)
     C.stroke()
+    -- draw label
+    let
+        x = _axScale p . midpoint . _axDomain $ p
+        y = ax ^. majorLength + ax ^. ticks . labelSize
+    drawLabel $ (ax ^. label) & labelOffset +~ (ax ^. ticksTransform) !* (V2 x y + ax ^. labelOffset)
 
 -- | drawTick expects pre-scaled coordinates in its second argument
 drawTick :: RealAxis -> (Double, Maybe Text) -> C.Canvas ()
@@ -112,7 +119,7 @@ drawTick ax (x, l) = let
     -- tick label
     case l of
      Just txt -> do
-         -- (TextMetrics w) <- measureText txt
-         -- invertY $ fillText (txt, x - w / 2, baseline - tickLength - _textSize ax)
-         D.drawText txt $ _ticksTransform ax !* (V2 x tickLength ^+^ ax ^. ticks . labelOffset)
+         drawLabel $ (ax ^. ticks . label)
+             & labelText .~ txt
+             & labelOffset +~ _ticksTransform ax !* (V2 x tickLength ^+^ ax ^. ticks . labelOffset)
      _-> return ()
