@@ -20,7 +20,9 @@ library
     Sluice,
     Sluice.Axis,
     Sluice.Canvas,
-    Sluice.Scale
+    Sluice.Scale,
+    Sluice.Text,
+    Sluice.Ticks
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8,
