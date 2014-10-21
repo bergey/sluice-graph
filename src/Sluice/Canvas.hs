@@ -3,7 +3,7 @@
 
 module Sluice.Canvas where
 
-import Graphics.Blank
+import Graphics.Blank as C
 
 import Data.Text  (Text)
 import Data.Text.Lazy (toStrict)
@@ -71,8 +71,16 @@ invertY c = saveRestore $ do
     c
 
 -- | drawText compensates for the flipped coordinate system of Canvas
-drawText :: Text -> Double -> Double -> Canvas ()
-drawText txt x y = saveRestore $ do
+drawText :: Text -> V2 Double -> Canvas ()
+drawText txt (V2 x y) = saveRestore $ do
     translate(x,y)
     scale(1,-1)
     fillText(txt,0,0)
+
+-- basic wrappers to use types from Linear
+
+moveTo :: V2 Double -> Canvas ()
+moveTo (V2 x y) = C.moveTo (x,y)
+
+lineTo :: V2 Double -> Canvas ()
+lineTo (V2 x y) = C.lineTo (x,y)

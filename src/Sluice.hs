@@ -33,7 +33,7 @@ data ScatterPlot = ScatterPlot {
 makeLenses ''ScatterPlot
 
 scatter :: ScatterPlot
-scatter = ScatterPlot [] [] def def def
+scatter = ScatterPlot [] [] bottomAxis leftAxis def
 
 instance Default ScatterPlot where
     def = scatter
@@ -49,12 +49,10 @@ instance Plot ScatterPlot where
             xDomain = _domain (_xAxis p) $ _xs p
             yDomain = _domain (_yAxis p) $ _ys p
             offset = (axisSize $ _yAxis p, axisSize $ _xAxis p)
-        -- draw data markers
         C.saveRestore $ do
             C.translate offset
+            -- draw data markers
             drawMarks (p ^. marker) $ map (fullScale <*>) pts
-        -- draw Axes
-        C.saveRestore $ do
-            C.translate (fst offset, 0)
-            drawAxis (AxisParams xDomain (fullScale ^. _x)) $ _xAxis p
-            -- drawAxis $ _yAxis p
+            -- draw Axes
+            drawAxis (AxisParams xDomain (fullScale ^. _x)) (_xAxis p)
+            drawAxis (AxisParams yDomain (fullScale ^. _y)) (_yAxis p)
